@@ -14,12 +14,14 @@ class TestTextNode(unittest.TestCase):
         node4 = TextNode("these are the same", TextType.ITALIC, url=None)
         self.assertEqual(node3, node4)
 
-    def test_eq(self):
+    def test__repr__(self):
+        node = TextNode("these are the same", TextType.ITALIC, url=None)
 
-        node5 = TextNode("not the same", TextType.BOLD, url=None)
-        node6 = TextNode("not the same", TextType.ITALIC, url=None)
-        self.assertNotEqual(node5, node6)
+        repr_string = repr(node)
+        self.assertIn("these are the same", repr_string)
         
+
+
         
 
 
