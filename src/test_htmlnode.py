@@ -30,8 +30,14 @@ class TestLeafNode(unittest.TestCase):
         self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
 
     def test_to_html(self):
-        node2 = LeafNode("a", "Click me!", {"href": "http://www.google.com"})
-        self.assertEqual(node2.to_html(), '<a href="http://www.google.com">Click me!</a>')
+        node2 = LeafNode(
+            "a", "Click me!",
+            {"href": "http://www.google.com"}
+        )
+        self.assertEqual(
+            node2.to_html(),
+            '<a href="http://www.google.com">Click me!</a>'
+        )
 
     def test_to_html(self):
         node3 = LeafNode(None, "testing", None)
@@ -81,7 +87,7 @@ class TestParentNode(unittest.TestCase):
             parent_node.to_html(),
             '<div class="container"><span>child</span></div>'
         )
-        
+
     def test_to_html_with_multiple_children(self):
         child1 = LeafNode("b", "bold")
         child2 = LeafNode("i", "italic")

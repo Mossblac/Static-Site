@@ -43,13 +43,7 @@ class ParentNode(HTMLNode):
         result += f"</{self.tag}>"
         return result
 
-
-
-
-
-
         
-
 class LeafNode(HTMLNode):
     def __init__(self, tag, value, props=None):
         super().__init__(tag, value, children=None, props=props)
