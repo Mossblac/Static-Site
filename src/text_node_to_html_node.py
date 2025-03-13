@@ -21,8 +21,7 @@ def text_node_to_html_node(text_node):
                 raise Exception(f"Invalid text type: {text_node.text_type}")
         
     
-def test_function():
-    return "test"
+
 
 if __name__ == "__main__":
     main()
