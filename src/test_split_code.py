@@ -48,7 +48,10 @@ class Test_Split_Code(unittest.TestCase):
         with self.assertRaises(Exception):
             split_nodes_delimiter([node], "**", TextType.BOLD)
 
-
+    def test_one_line(self):
+        node = TextNode("_saucy_", TextType.TEXT)
+        new_node = split_nodes_delimiter([node], "_", TextType.ITALIC)
+        self.assertEqual(new_node, [TextNode("saucy", TextType.ITALIC)])
 
 if __name__ == "__main__":
     unittest.main()
