@@ -1,6 +1,17 @@
 import re
+from enum import Enum
 from textnode import TextType, TextNode
 from regex_code import extract_markdown_images, extract_markdown_links
+
+class BlockType(Enum):
+    PARAGRAPH = "paragraph"
+    HEADING = "heading"
+    CODE = "code"
+    QUOTE = "quote"
+    UNORDERED_LIST = "unordered_list"
+    ORDERED_LIST = "ordered_list"
+
+
 
 def text_to_textnodes(text):
     nodes = [TextNode(text, TextType.TEXT)]
@@ -97,6 +108,24 @@ def split_nodes_link(old_nodes):
             new_nodes.append(TextNode(original_text, TextType.TEXT))
     return new_nodes
 
+
+def markdown_to_blocks(markdown):
+    markdown_split = markdown.split("\n\n")
+    markdown_block = []
+    for line in markdown_split:
+        markdown_block.append(line.strip())
+
+    return markdown_block
+
+def block_to_block_type(block):
+    pass
+#assignment it takes a block and returns a BlockType 
+#Headings start with 1-6 # characters, followed by a space and then the heading text.
+#Code blocks must start with 3 backticks and end with 3 backticks.
+#Every line in a quote block must start with a > character.
+#Every line in an unordered list block must start with a - character, followed by a space.
+#Every line in an ordered list block must start with a number followed by a . character and a space. The number must start at 1 and increment by 1 for each line.
+#If none of the above conditions are met, the block is a normal paragraph.
 
 
 if __name__ == "__main__":
