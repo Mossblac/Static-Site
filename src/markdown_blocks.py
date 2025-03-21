@@ -1,41 +1,55 @@
-import os
-import shutil
-from textnode import TextType, TextNode, text_node_to_html_node
+from enum import Enum
+
 from htmlnode import ParentNode
-from split_code import (
-    text_to_textnodes,
-    markdown_to_blocks,
-    block_to_block_type,
-    BlockType
-)
-
-def generate_page(from_path, template_path, dest_path):
-    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
-    with open(from_path) as file:
-        from_path_content = file.read()
-    with open(template_path) as file:
-        template_path_content = file.read()
-    from_path_node = markdown_to_html_node(from_path_content)
-    from_path_html = from_path_node.to_html()
-    title = extract_title(from_path_content)
-    final_html = template_path_content.replace("Title", f"{title}").replace(f"Content", f"{from_path_html}")
-    path = os.path.dirname(dest_path)
-    if not os.path.exists(path):
-        os.makedirs(path)
-    file_destination = os.path.join(path, "index.html")
-    with open(file_destination, 'w') as f:
-        f.write(final_html)
+from inline_markdown import text_to_textnodes
+from textnode import text_node_to_html_node, TextNode, TextType
 
 
-def extract_title(markdown):
-    title = ""
-    markdown_split = markdown.split("\n\n")
-    if "# " not in markdown_split[0]:
-        raise Exception("no title")
-    for line in markdown_split:
-        if line.startswith("# "):
-            title += line.strip("#")
-    return title.strip()
+class BlockType(Enum):
+    PARAGRAPH = "paragraph"
+    HEADING = "heading"
+    CODE = "code"
+    QUOTE = "quote"
+    OLIST = "ordered_list"
+    ULIST = "unordered_list"
+
+
+def markdown_to_blocks(markdown):
+    blocks = markdown.split("\n\n")
+    filtered_blocks = []
+    for block in blocks:
+        if block == "":
+            continue
+        block = block.strip()
+        filtered_blocks.append(block)
+    return filtered_blocks
+
+
+def block_to_block_type(block):
+    lines = block.split("\n")
+
+    if block.startswith(("# ", "## ", "### ", "#### ", "##### ", "###### ")):
+        return BlockType.HEADING
+    if len(lines) > 1 and lines[0].startswith("```") and lines[-1].startswith("```"):
+        return BlockType.CODE
+    if block.startswith(">"):
+        for line in lines:
+            if not line.startswith(">"):
+                return BlockType.PARAGRAPH
+        return BlockType.QUOTE
+    if block.startswith("- "):
+        for line in lines:
+            if not line.startswith("- "):
+                return BlockType.PARAGRAPH
+        return BlockType.ULIST
+    if block.startswith("1. "):
+        i = 1
+        for line in lines:
+            if not line.startswith(f"{i}. "):
+                return BlockType.PARAGRAPH
+            i += 1
+        return BlockType.OLIST
+    return BlockType.PARAGRAPH
 
 
 def markdown_to_html_node(markdown):
@@ -55,9 +69,9 @@ def block_to_html_node(block):
         return heading_to_html_node(block)
     if block_type == BlockType.CODE:
         return code_to_html_node(block)
-    if block_type == BlockType.ORDERED_LIST:
+    if block_type == BlockType.OLIST:
         return olist_to_html_node(block)
-    if block_type == BlockType.UNORDERED_LIST:
+    if block_type == BlockType.ULIST:
         return ulist_to_html_node(block)
     if block_type == BlockType.QUOTE:
         return quote_to_html_node(block)
