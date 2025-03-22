@@ -15,10 +15,14 @@ def generate_page(from_path, template_path, dest_path):
 
     node = markdown_to_html_node(markdown_content)
     html = node.to_html()
+    
 
     title = extract_title(markdown_content)
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", html)
+    template = template.replace('href="/', 'href="{BASEPATH}')
+    template = template.replace('src="/', 'src="{BASEBATH}')
+    
 
     dest_dir_path = os.path.dirname(dest_path)
     if dest_dir_path != "":
@@ -36,6 +40,7 @@ def extract_title(md):
 
 
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+
     for filename in os.listdir(dir_path_content):
         from_path = os.path.join(dir_path_content, filename)
         dest_path = os.path.join(dest_dir_path, filename)
