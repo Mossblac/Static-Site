@@ -1,14 +1,11 @@
 import unittest
-from split_code import (
+from inline_markdown import (
     split_nodes_delimiter,
     split_nodes_image,
     split_nodes_link,
     text_to_textnodes,
     extract_markdown_links,
     extract_markdown_images,
-    markdown_to_blocks,
-    block_to_block_type,
-    BlockType
 )
 
 from textnode import TextNode, TextType
@@ -193,65 +190,6 @@ class TestInlineMarkdown(unittest.TestCase):
             ],
             nodes,
         )
-
-
-    def test_markdown_to_blocks(self):
-        md = """
-This is **bolded** paragraph
-
-This is another paragraph with _italic_ text and `code` here
-This is the same paragraph on a new line
-
-- This is a list
-- with items
-"""
-        blocks = markdown_to_blocks(md)
-        self.assertEqual(
-        blocks,
-        [
-            "This is **bolded** paragraph",
-            "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
-            "- This is a list\n- with items",
-        ],
-    )
-
-    def test_markdown_to_blocks_two(self):
-        md = """
-This is an _italic_ paragraph
-
-This is a paragraph with three lines in it
-the second line has **bold** text
-and the third has 'code' in it
-
--this list
--is split
--randomly
- """ 
-    
-        blocks = markdown_to_blocks(md)
-        self.assertEqual(
-        blocks, 
-        [
-            "This is an _italic_ paragraph",
-            "This is a paragraph with three lines in it\nthe second line has **bold** text\nand the third has 'code' in it",
-            "-this list\n-is split\n-randomly",
-        ]
-    )
-
-
-    def test_block_to_block_types(self):
-        block = "# heading"
-        self.assertEqual(block_to_block_type(block), BlockType.HEADING)
-        block = "```\ncode\n```"
-        self.assertEqual(block_to_block_type(block), BlockType.CODE)
-        block = "> quote\n> more quote"
-        self.assertEqual(block_to_block_type(block), BlockType.QUOTE)
-        block = "- list\n- items"
-        self.assertEqual(block_to_block_type(block), BlockType.UNORDERED_LIST)
-        block = "1. list\n2. items"
-        self.assertEqual(block_to_block_type(block), BlockType.ORDERED_LIST)
-        block = "paragraph"
-        self.assertEqual(block_to_block_type(block), BlockType.PARAGRAPH)
 
 
 if __name__ == "__main__":
