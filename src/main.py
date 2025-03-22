@@ -18,10 +18,12 @@ def main():
         basepath = sys.argv[1]
     else:
         basepath = "/"
+    if not basepath.endswith("/"):
+        basepath += "/"
     print(basepath)
 
     print("Deleting docs directory...")
-    if os.path.exists(dir_path_public):
+    if os.path.exists(dir_path_public) and os.path.isdir(dir_path_public):
         shutil.rmtree(dir_path_public)
 
     print("Copying static files to docs directory...")
