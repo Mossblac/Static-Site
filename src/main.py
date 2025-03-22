@@ -12,12 +12,13 @@ template_path = "./template.html"
 
 
 
+
 def main():
     if len(sys.argv) > 1:
-        BASEPATH = sys.argv[1]
+        basepath = sys.argv[1]
     else:
-        BASEPATH = "/"
-    print(BASEPATH)
+        basepath = "/"
+    print(basepath)
 
     print("Deleting docs directory...")
     if os.path.exists(dir_path_public):
@@ -30,7 +31,8 @@ def main():
     generate_pages_recursive(
         dir_path_content,
         template_path,
-        dir_path_public
+        dir_path_public,
+        basepath
     )
 
 
